@@ -30,19 +30,21 @@ export const App = () => {
 
   // blur example = 100%
   return (
-    <Stack justifyContent="space-between" bg='red' h="100vh" p={8}>
-      <Stack>
-        <Heading>{currentMovie?.name}</Heading>
-        <Text>{currentMovie?.sinopsis}</Text>
+    <Stack justifyContent="space-between" h="100vh" p={16}>
+      <Stack maxW="50%" gap={4} my='auto'>
+        <Stack>
+          <Heading>{currentMovie?.name}</Heading>
+          <Text>{currentMovie?.sinopsis}</Text>
+        </Stack>
         <Stack direction="row">
-          <Button colorScheme="purple">Comprar ingressos</Button>
-          <Button variant="outline" colorScheme="purple">
+          <Button colorScheme="pink">Comprar ingressos</Button>
+          <Button variant="outline" colorScheme="pink">
             Trailer
           </Button>
         </Stack>
       </Stack>
 
-      {/* <Image
+      <Image
         src={currentMovie?.cover}
         height="100vh"
         width="100%"
@@ -51,11 +53,18 @@ export const App = () => {
         zIndex={-1}
         inset={0}
         objectPosition="center center"
-      /> */}
+        filter={"blur(5px)"}
+        brightness={"0.1"}
+      />
 
-      <Stack direction="row" justifyContent="center">
+      <Stack direction="row" justifyContent="center" gap={8}>
         {movies.map((movie) => (
           <Image
+            cursor='pointer'
+            _hover={{
+              transform: "translateY(-10px)",
+              transition: "all 0.3s ease-in-out",
+            }}
             key={movie.id}
             scale={"1"}
             src={movie.cover}
