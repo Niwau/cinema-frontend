@@ -1,24 +1,19 @@
 import { Button, Heading, Image, Stack, Text } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { getMovies, Movie } from "./api/api";
 import { Spinner } from "@chakra-ui/react";
+import { useCinemaStore } from "../store";
+import { useEffect } from "react";
+import { Movie } from "../api/api";
+import { useNavigate } from "react-router-dom";
 
-export const App = () => {
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [currentMovie, setCurrentMovie] = useState<Movie | null>(null);
-
-  useEffect(() => {
-    getMovies().then((movies) => {
-      setMovies(movies);
-      setIsLoading(false);
-    });
-  }, []);
+export const Home = () => {
+ 
+  const store = useCinemaStore();
+  const { movies, isLoading, currentMovie } = store;
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const randomMovie = movies[Math.floor(Math.random() * movies.length)];
-    setCurrentMovie(randomMovie);
-  }, [movies]);
+    store.getMovies();
+  }, [])
 
   if (isLoading) {
     return <Spinner />;
@@ -28,7 +23,11 @@ export const App = () => {
     return <div>No movies found</div>;
   }
 
-  // blur example = 100%
+  const onMovieClick = (movie: Movie) => {
+    store.setSelectedMovie(movie);
+    navigate(`/${movie.id}/sessions`);
+  }
+
   return (
     <Stack justifyContent="space-between" h="100vh" p={16}>
       <Stack maxW="50%" gap={4} my='auto'>
@@ -60,6 +59,7 @@ export const App = () => {
       <Stack direction="row" justifyContent="center" gap={8}>
         {movies.map((movie) => (
           <Image
+            onClick={() => onMovieClick(movie)}
             cursor='pointer'
             _hover={{
               transform: "translateY(-10px)",
